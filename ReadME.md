@@ -33,7 +33,7 @@ test events
 2. Clone the repo and navigate into the directory:
 
    ```bash
-   git clone <your_repo_url>
+   git clone Calander-app
    cd calendar_app
    ```
 3. Run the app:
