@@ -43,5 +43,15 @@
     "title": "all day ",
     "start_time": "06-21-2025 01:00 AM",
     "end_time": "06-22-2025 01:00 AM"
+  },
+  {
+    "title": "dinner",
+    "start_time": "06-20-2025 08:00 PM",
+    "end_time": "06-20-2025 09:00 PM"
+  },
+  {
+    "title": "full day",
+    "start_time": "06-24-2025 12:00 AM",
+    "end_time": "06-24-2025 11:59 PM"
   }
 ]

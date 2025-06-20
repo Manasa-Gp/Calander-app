@@ -48,48 +48,56 @@ class Scheduler:
             print("Invalid date format. Use MM-DD-YYYY.")
             return
 
-        for event in self.events:
-            if not isinstance(event, Event):
-                print("Skipping invalid event:", event)
-                continue
-            
-            if event.start_time.date() <= date_obj <= event.end_time.date():
-                found = True
-                print(f"Event: {event.title}")
+        # Filter events for the date
+        events_by_date = [
+            event for event in self.events
+            if isinstance(event, Event) and event.start_time.date() <= date_obj <= event.end_time.date()
+        ]
 
-                if event.start_time.date() == event.end_time.date():
-                    # Same-day event — show only time
-                    print(f"Start Time: {event.start_time.strftime('%I:%M %p')}")
-                    print(f"End Time:   {event.end_time.strftime('%I:%M %p')}")
-                else:
-                    # Overnight event — show full date and time
-                    print(f"Start Time: {event.start_time.strftime('%m-%d-%Y %I:%M %p')}")
-                    print(f"End Time:   {event.end_time.strftime('%m-%d-%Y %I:%M %p')}")
-                    print("Note: This is an overnight event.")
+        # Sort by start time
+        events_by_date.sort(key=lambda e: e.start_time)
 
-                print("-" * 30)
+        for event in events_by_date:
+            found = True
+            print(f"Event: {event.title}")
+
+            if event.start_time.date() == event.end_time.date():
+                print(f"Start Time: {event.start_time.strftime('%I:%M %p')}")
+                print(f"End Time:   {event.end_time.strftime('%I:%M %p')}")
+            else:
+                print(f"Start Time: {event.start_time.strftime('%m-%d-%Y %I:%M %p')}")
+                print(f"End Time:   {event.end_time.strftime('%m-%d-%Y %I:%M %p')}")
+                print("Note: This is an overnight event.")
+            print("-" * 30)
 
         if not found:
             print(f"No events scheduled for {date_str}.")
 
+
     # List all remaining events for today, sorted by start time
     def list_remaining_events_today(self):
         now = datetime.now()
-        found = False
-        for event in self.events:
-            # Show only events starting later today
-            if event.start_time.date() == now.date() and event.start_time.time() > now.time():
-                print(f"Event: {event.title}")
-                print(f"Start Time: {event.start_time.strftime('%I:%M %p')}")
-                if event.end_time.date() > event.start_time.date():
-                    # Overnight event – show date as well
-                    print(f"End Time: {event.end_time.strftime('%m-%d-%Y %I:%M %p')} (overnight)")
-                else:
-                    print(f"End Time: {event.end_time.strftime('%I:%M %p')}")
-                print("-" * 30)
-                found = True
-        if not found:
+        remaining_today = [
+            e for e in self.events
+            if e.start_time.date() == now.date() and e.start_time.time() > now.time()
+        ]
+
+        if not remaining_today:
             print("No remaining events for today.")
+            return
+
+        # Sort remaining events by start_time
+        remaining_today.sort(key=lambda e: e.start_time)
+
+        for event in remaining_today:
+            print(f"Event: {event.title}")
+            print(f"Start Time: {event.start_time.strftime('%I:%M %p')}")
+            if event.end_time.date() > event.start_time.date():
+                # Overnight event – show date as well
+                print(f"End Time: {event.end_time.strftime('%m-%d-%Y %I:%M %p')} (overnight)")
+            else:
+                print(f"End Time: {event.end_time.strftime('%I:%M %p')}")
+            print("-" * 30)
 
 
     # Find the next available slot for a given date and duration
